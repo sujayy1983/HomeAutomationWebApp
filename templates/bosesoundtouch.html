@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+        <title>
+          Bosesound Touch 
+        </title>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+        <link rel="stylesheet" href="/static/css/bose.css">
+        <script src="/static/js/websocket.js"></script>
+    </head>
+  
+    <body bgcolor="black">
+        <div class="wrapper">
+            <nav id="sidebar">
+                <ul class="list-unstyled components">
+                    <h4 align="center"><a href="/">Home page</a></h4>
+                    <li><a href="/bosesoundtouch">Bose soundtouch</a></li>
+                </ul>
+            </nav>
+
+            <div id="content">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="btn btn-default navbar-btn">
+                                <i class="glyphicon glyphicon-align-left"></i>
+                                <span>Toggle Sidebar</span>
+                            </button>
+                        </div>
+        
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="#TBD">Contact</a></li>
+                                <li><a href="#TBD">Help</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <font color="white"><h2>Home automation - Bose Soundtouch</h2></font>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"> Discovered Soundtouch </div>
+                    <div class="panel-body" >
+                        <div class="container">
+                            <h4>Soundtouch basic controls</h4>
+                            <div class="btn-group btn-group-justified">
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'POWER')">POWER ON</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'STOP')">POWER OFF</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'AUX_INPUT')">AUX</a>
+                            </div>
+                            <div class="btn-group btn-group-justified">
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'MUTE')">MUTE</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'VOLUME_UP')">Vol UP</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'VOLUME_DOWN')">Vol DOWN</a>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <h4>Preset Internet radio - Channels</h4>
+                            <div class="btn-group btn-group-justified">
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'PRESET_1')">Ch1</a>
+                                <a class="btn btn-info"
+                onclick="javascript:WebSocketSupport('bose', 'PRESET_2')">Ch2</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'PRESET_3')">Ch3</a>
+                            </div>
+                            <div class="btn-group btn-group-justified">
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'PRESET_4')">Ch4</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'PRESET_5')">Ch5</a>
+                                <a class="btn btn-info" onclick="javascript:WebSocketSupport('bose', 'PRESET_6')">Ch6</a>
+                            </div>
+                        </div>
+                        <div id="output"></div>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+                <div id="footer"><a>Sujayyendhiren Ramarao Srinivasamurthi</a></div>
+            </div>
+        </div>
+       
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                });
+            });
+        </script>
+    </body>
+</html>
