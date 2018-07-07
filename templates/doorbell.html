@@ -5,11 +5,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
         <title>
-           <p> Testing </p> 
+          Virtual doorbell 
         </title>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
-        <link rel="stylesheet" href="/static/css/welcome.css">
+        <link rel="stylesheet" href="/static/css/bose.css">
+        <script src="/static/js/websocket.js"></script>
     </head>
   
     <body bgcolor="black">
@@ -41,12 +42,20 @@
                     </div>
                 </nav>
 
+                <font color="white"><h2>Home automation - Virtual Doorbell</h2></font>
+
                 <div class="panel panel-default">
+                    <div class="panel-heading">Discovered doorbell tunes </div>
                     <div class="panel-body" >
                         <div class="container">
-                            <h4>Golang Home automation webapp</h4>
-                            <p>This webapp is developed with GoLang and boostrap. This webapp leverages websockets for improved user experience.</p>
+                            <div class="btn-group">
+
+                            {{range .}}
+                                <a class='btn btn-warning' onclick="javascript:WebSocketSupport('doorbell', {{.}})">{{.}}</a>
+                            {{end}}
+                            </div>
                         </div>
+
                         <div id="output"></div>
                     </div>
                 </div>

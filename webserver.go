@@ -3,19 +3,16 @@ package main
 import (
     "fmt"
     "log"
-	//"bytes"
     "strings"
+    "os"
+    "os/exec"
     "html/template"
     "net/http"
+    //"container/list"
 	"io/ioutil"
-	//"encoding/xml"
 
     "github.com/gorilla/websocket"
 )
-
-type msg struct {
-	Num int
-}
 
 func helloWorld(w http.ResponseWriter, req *http.Request) {
     render(w, "welcome.html")
@@ -24,6 +21,34 @@ func helloWorld(w http.ResponseWriter, req *http.Request) {
 func boseSoundtouch(w http.ResponseWriter, req *http.Request) {
     fmt.Println("SoundTouch")
     render(w, "bosesoundtouch.html")
+}
+
+func doorbell(w http.ResponseWriter, req *http.Request) {
+    tunesdir := "/home/pi/tunes/"
+
+    fmt.Println("Virtual doorbell")
+
+    filelist, err := ioutil.ReadDir(tunesdir)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    files := make([]string, len(filelist)) 
+    for idx, file := range filelist {
+        fmt.Println(file.Name())
+        files[idx] = file.Name()
+    }
+
+    tmpl := fmt.Sprintf("templates/doorbell.html")
+    t, err := template.ParseFiles(tmpl)
+
+    if err != nil {
+        log.Print("template parsing error: ", err)
+    }
+    err = t.Execute(w, files)
+    if err != nil {
+        log.Print("template executing error: ", err)
+    }
 }
 
 func websocketHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +65,8 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func echo(conn *websocket.Conn) {
+
+    tunesdir := "/home/pi/tunes/"
 
     boseurl := "http://192.168.1.185:8090/key"
 
@@ -67,8 +94,6 @@ func echo(conn *websocket.Conn) {
         
             fmt.Println("Press: " + pressxml)
             fmt.Println("Release: " + releasexml)
-            //buf, _ := xml.Marshal(pressxml)
-            //body := bytes.NewBuffer(buf)
     
             rpxml, _ := http.Post(boseurl, "text/xml", strings.NewReader(pressxml))
             resp, _ := ioutil.ReadAll(rpxml.Body)
@@ -77,6 +102,17 @@ func echo(conn *websocket.Conn) {
             rlxml, _ := http.Post(boseurl, "text/xml", strings.NewReader(releasexml))
             resprlxml, _ := ioutil.ReadAll(rlxml.Body)
             print(string(resprlxml))
+        } else if strings.Contains(data, "doorbell")  {
+            parts := strings.Split(data, ",")
+            /*  #------------------#
+                # Virtual doorbell #
+                #------------------# */
+            args := []string{tunesdir + parts[1]}
+            if err := exec.Command("mpg321", args...).Run(); err != nil {
+                fmt.Fprintln(os.Stderr, err)
+                os.Exit(1)
+            }
+            fmt.Println(parts[1])
         }
 
         if err := conn.WriteMessage(messageType, p); err != nil {
@@ -86,14 +122,14 @@ func echo(conn *websocket.Conn) {
 	}
 }
 
-func render(w http.ResponseWriter, tmpl string) {
+func render(w http.ResponseWriter, tmpl string, ) {
     tmpl = fmt.Sprintf("templates/%s", tmpl)
     t, err := template.ParseFiles(tmpl)
 
     if err != nil {
         log.Print("template parsing error: ", err)
     }
-    err = t.Execute(w, "test")
+    err = t.Execute(w, "")
     if err != nil {
         log.Print("template executing error: ", err)
     }
@@ -105,6 +141,8 @@ func main() {
 
     http.HandleFunc("/", helloWorld)
     http.HandleFunc("/bosesoundtouch", boseSoundtouch)
+    http.HandleFunc("/doorbell", doorbell)
+
     http.HandleFunc("/websocket", websocketHandler)
 
     err := http.ListenAndServe(":80", nil)
