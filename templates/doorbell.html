@@ -10,7 +10,26 @@
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
         <link rel="stylesheet" href="/static/css/bose.css">
+
         <script src="/static/js/websocket.js"></script>
+        <style>
+            .block {
+                display: block;
+                width: 100%;
+                border: none;
+                background-color: #221133;
+                color: white;
+                padding: 14px 28px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+            }
+
+            .block:hover {
+                background-color: #ddd;
+                color: black;
+            }
+        </style>
     </head>
   
     <body bgcolor="black">
@@ -47,14 +66,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Discovered doorbell tunes </div>
                     <div class="panel-body" >
-                        <div class="container">
-                            <div class="btn-group">
-
-                            {{range .}}
-                                <a class='btn btn-warning' onclick="javascript:WebSocketSupport('doorbell', {{.}})">{{.}}</a>
-                            {{end}}
-                            </div>
-                        </div>
+                        {{range .}}
+                           <a class='block btn btn-warning' onclick="javascript:WebSocketSupport('doorbell', {{.}})">{{.}}</a><br>
+                        {{end}}
 
                         <div id="output"></div>
                     </div>
