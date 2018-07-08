@@ -8,8 +8,8 @@ import (
     "os/exec"
     "html/template"
     "net/http"
-    //"container/list"
 	"io/ioutil"
+    "encoding/json"
 
     "github.com/gorilla/websocket"
 )
@@ -21,6 +21,42 @@ func helloWorld(w http.ResponseWriter, req *http.Request) {
 func boseSoundtouch(w http.ResponseWriter, req *http.Request) {
     fmt.Println("SoundTouch")
     render(w, "bosesoundtouch.html")
+}
+
+func deviceDiscovery(w http.ResponseWriter, req *http.Request) {
+    fmt.Println("Device Discovery")
+
+    tmpl := fmt.Sprintf("templates/devicediscovery.html")
+    t, err := template.ParseFiles(tmpl)
+
+    if err != nil {
+        log.Print("template parsing error: ", err)
+    }
+
+    cachefile := "/home/pi/src/cache/devices.cache"
+
+    databytes, err := ioutil.ReadFile(cachefile)
+
+    if err != nil {
+        fmt.Print(err)
+    }
+
+    dat := make(map[string]string)
+
+    if err := json.Unmarshal(databytes, &dat); err != nil {
+        panic(err)
+    }
+
+    err = t.Execute(w, dat)
+
+    if err != nil {
+        log.Print("template executing error: ", err)
+    }
+}
+
+func philips(w http.ResponseWriter, req *http.Request) {
+    fmt.Println("Philips")
+    render(w, "philips.html")
 }
 
 func doorbell(w http.ResponseWriter, req *http.Request) {
@@ -139,10 +175,28 @@ func main() {
     fs := http.FileServer(http.Dir("static"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
 
+    /* 
+       #-----------#
+       # Home page #
+       #-----------#
+    */
     http.HandleFunc("/", helloWorld)
-    http.HandleFunc("/bosesoundtouch", boseSoundtouch)
-    http.HandleFunc("/doorbell", doorbell)
 
+    /*
+        #--------#
+        # URI(s) #
+        #--------#
+    */
+    http.HandleFunc("/devicediscovery", deviceDiscovery)
+    http.HandleFunc("/doorbell", doorbell)
+    http.HandleFunc("/philips", philips)
+    http.HandleFunc("/bosesoundtouch", boseSoundtouch)
+
+    /*
+        #--------------------#
+        # Websocket handling #
+        #--------------------#
+    */
     http.HandleFunc("/websocket", websocketHandler)
 
     err := http.ListenAndServe(":80", nil)

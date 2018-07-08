@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
         <title>
-          Virtual doorbell 
+          Discovered Home devices 
         </title>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
@@ -63,15 +63,27 @@
                     </div>
                 </nav>
 
-                <font color="black"><h2>Home automation - Virtual Doorbell</h2></font>
+                <font color="black"><h2>Home automation - Discovered devices</h2></font>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Discovered doorbell tunes </div>
+                    <div class="panel-heading">Discovered devices</div>
                     <div class="panel-body" >
-                        {{range .}}
-                           <a class='block btn btn-warning' onclick="javascript:WebSocketSupport('doorbell', {{.}})">{{.}}</a><br>
-                        {{end}}
-
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Hostname</th>
+                              <th>IP address</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {{ range $key, $value := . }}
+                            <tr>
+                              <td>{{$key}}</td>
+                              <td>{{$value}}</td>
+                            </tr>
+                          {{ end }}
+                          </tbody>
+                        </table>
                         <div id="output"></div>
                     </div>
                 </div>
